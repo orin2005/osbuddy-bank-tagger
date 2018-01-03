@@ -6,7 +6,7 @@
 
 You will need to install all the npm dependencies first. Do this by running the following:
 
-`npm build`
+`npm install`
 
 #### Starting the app
 
