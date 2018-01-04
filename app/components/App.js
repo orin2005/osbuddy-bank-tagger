@@ -63,10 +63,7 @@ export default class App extends Component {
   }
 
   searchItems() {
-    const arr = [];
-    arr.push(items.filter((str) => str.name.toLowerCase().includes(this.state.searchText.toLowerCase())));
-    this.setState({unselectedItems: arr});
-    console.log(arr);
+    this.setState({ unselectedItems : items.filter((str) => str.name.toLowerCase().includes(this.state.searchText.toLowerCase())) });
   }  
 
   handleSearchTextChange(evt) {
