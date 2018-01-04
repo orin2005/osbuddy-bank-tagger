@@ -14,13 +14,17 @@ export default class App extends Component {
     super(props);
 
     this.state = {
+      unselectedItems: [],
       selectedItems: [],
-      tag: 'generatedTag'
+      tag: 'generatedTag',
+      searchText: 'test'
     };
 
     this.handleClick = this.handleClick.bind(this);
     this.exportTag = this.exportTag.bind(this);
+    this.searchItems = this.searchItems.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
+    this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
   }
 
   handleClick(item) {
@@ -47,10 +51,26 @@ export default class App extends Component {
 
   }
 
+
   handleTextChange(evt) {
-    console.log(evt);
-    console.log(evt.target.value);
     this.setState({ tag: evt.target.value });
+    console.log(this.state.tag)
+  }
+
+  searchItems() {
+    const arr = [];
+    arr.push(items.filter(
+      function(str)
+      {
+       return str.name.toLowerCase().includes(this.state.searchText.toLowerCase());
+      }
+    ));
+    console.log(arr);
+  }  
+
+  handleSearchTextChange(evt) {
+    this.setState({ searchText: evt.target.value });
+    console.log(this.state.searchText);
   }
 
   render() {
@@ -60,7 +80,7 @@ export default class App extends Component {
           <Col md={6}>
             <div className={'items-box'}>
               <Row>
-                {items.map(d =>
+                {this.state.unselectedItems.map(d =>
                   (<Col
                     key={d.id}
                     md={3}
@@ -70,7 +90,7 @@ export default class App extends Component {
                 )}
               </Row>
             </div>
-          </Col>
+          </Col>          
           <Col md={2} />
           <Col md={6}>
             <div className={'items-box'}>
@@ -95,6 +115,20 @@ export default class App extends Component {
               {' '}
               <Button onClick={e=>this.exportTag()}>
                 Export tag
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={1} />
+          <Col md={5}>
+            <Form inline>
+              <FormGroup controlId="formInlineName">
+                <FormControl type="text" placeholder="Enter text to search" onChange={(evt) => this.handleSearchTextChange(evt)} />
+              </FormGroup>
+              {' '}
+              <Button onClick={e=>this.searchItems()}>
+                Search
               </Button>
             </Form>
           </Col>
