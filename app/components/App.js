@@ -41,7 +41,7 @@ export default class App extends Component {
     let allIds = this.state.selectedItems.map( si => '{\\\"id\\\":' + si.id + '}');
     allIds.slice(0, allIds.length-1);
 
-    fs.writeFile("C:/Users/developer/Desktop/tag.txt", '{\"enabled\":{\"type\":\"hidden\",\"value\":\"true\"},\"tags\":{\"type\":\"hidden\",\"value\":\"[{\\\"tag\\\":\\\"' + this.state.tag + '\\\",\\\"ids\\\":[' + allIds + ']}]\"}}', function(err) {
+    fs.writeFile("C:/Users/developer/Desktop/" + this.state.tag + ".txt", '{\"enabled\":{\"type\":\"hidden\",\"value\":\"true\"},\"tags\":{\"type\":\"hidden\",\"value\":\"[{\\\"tag\\\":\\\"' + this.state.tag + '\\\",\\\"ids\\\":[' + allIds + ']}]\"}}', function(err) {
       if(err) {
           return console.log(err);
       }
@@ -63,7 +63,7 @@ export default class App extends Component {
   }
 
   searchItems() {
-    this.setState({ unselectedItems : items.filter((str) => str.name.toLowerCase().includes(this.state.searchText.toLowerCase())) });
+    this.setState({unselectedItems : items.filter((str) => str.name.toLowerCase().includes(this.state.searchText.toLowerCase()) && true)});
   }  
 
   handleSearchTextChange(evt) {
@@ -102,6 +102,18 @@ export default class App extends Component {
               </Row>
             </div>
           </Col>
+          <Col md={1} />
+          <Col md={5}>
+            <Form inline>
+              <FormGroup controlId="formInlineName">
+                <FormControl type="text" placeholder="Enter text to search" onChange={(evt) => this.handleSearchTextChange(evt)} />
+              </FormGroup>
+              {' '}
+              <Button onClick={e=>this.searchItems()}>
+                Search
+              </Button>
+            </Form>
+          </Col>
         </Row>
         <Row>
           <Col md={7} />
@@ -117,19 +129,7 @@ export default class App extends Component {
             </Form>
           </Col>
         </Row>
-        <Row>
-          <Col md={1} />
-          <Col md={5}>
-            <Form inline>
-              <FormGroup controlId="formInlineName">
-                <FormControl type="text" placeholder="Enter text to search" onChange={(evt) => this.handleSearchTextChange(evt)} />
-              </FormGroup>
-              {' '}
-              <Button onClick={e=>this.searchItems()}>
-                Search
-              </Button>
-            </Form>
-          </Col>
+        <Row>          
         </Row>
       </Grid>
     );
