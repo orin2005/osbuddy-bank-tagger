@@ -75,13 +75,13 @@ export default class App extends Component {
     return (
       <Grid>
         <Row>
-          <Col md={6}>
+          <Col xs={6}>
             <div className={'items-box'}>
               <Row>
                 {this.state.unselectedItems.map(d =>
                   (<Col
                     key={d.id}
-                    md={3}
+                    xs={3}
                     onClick={evt => this.handleClick(d)}>
                     <Item item={d} />
                   </Col>)
@@ -89,21 +89,24 @@ export default class App extends Component {
               </Row>
             </div>
           </Col>          
-          <Col md={2} />
-          <Col md={6}>
+          <Col xs={2} />
+          <Col xs={6}>
             <div className={'items-box'}>
               <Row>
                 {this.state.selectedItems.map( d =>
                   (<Col
                     key={d.id}
-                    md={3}>
+                    xs={3}>
                   <Item item={d} />
                 </Col>))}
               </Row>
             </div>
           </Col>
-          <Col md={1} />
-          <Col md={5}>
+          <Col xs={1} />
+        </Row>
+        <Row>
+          <Col xs={1} />
+          <Col xs={5}>
             <Form inline>
               <FormGroup controlId="formInlineName">
                 <FormControl type="text" placeholder="Enter text to search" onChange={(evt) => this.handleSearchTextChange(evt)} />
@@ -114,10 +117,8 @@ export default class App extends Component {
               </Button>
             </Form>
           </Col>
-        </Row>
-        <Row>
-          <Col md={7} />
-          <Col md={5}>
+          <Col xs={1} />
+          <Col xs={5}>
             <Form inline>
               <FormGroup controlId="formInlineName">
                 <FormControl type="text" placeholder="Tag name" onChange={(evt) => this.handleTextChange(evt)} />
