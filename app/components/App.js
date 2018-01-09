@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col, Form, FormGroup, Button, FormControl } from 'react-bootstrap';
 import fs from 'fs';
+import {remote} from 'electron';
 
 import Item from './Item';
 
@@ -41,12 +42,14 @@ export default class App extends Component {
     let allIds = this.state.selectedItems.map( si => '{\\\"id\\\":' + si.id + '}');
     allIds.slice(0, allIds.length-1);
 
-    fs.writeFile("C:/Users/developer/Desktop/" + this.state.tag + ".txt", '{\"enabled\":{\"type\":\"hidden\",\"value\":\"true\"},\"tags\":{\"type\":\"hidden\",\"value\":\"[{\\\"tag\\\":\\\"' + this.state.tag + '\\\",\\\"ids\\\":[' + allIds + ']}]\"}}', function(err) {
-      if(err) {
-          return console.log(err);
+    const fileName = remote.dialog.showSaveDialog({ title: 'Save the tag' });
+
+    fs.writeFile(fileName, '{"enabled":{"type":"hidden","value":"true"},"tags":{"type":"hidden","value":"[{\\"tag\\":\\"' + this.state.tag + '\\",\\"ids\\":[' + allIds + ']}]"}}', (err) => {
+      if (err) {
+        return console.log(err);
       }
 
-      console.log("The file was saved!");
+      console.log('The file was saved!');
     });
 
   }
@@ -64,7 +67,7 @@ export default class App extends Component {
 
   searchItems() {
     this.setState({unselectedItems : items.filter((str) => str.name.toLowerCase().includes(this.state.searchText.toLowerCase()) && true)});
-  }  
+  }
 
   handleSearchTextChange(evt) {
     this.setState({ searchText: evt.target.value });
@@ -88,7 +91,7 @@ export default class App extends Component {
                 )}
               </Row>
             </div>
-          </Col>          
+          </Col>
           <Col xs={2} />
           <Col xs={6}>
             <div className={'items-box'}>
@@ -130,7 +133,7 @@ export default class App extends Component {
             </Form>
           </Col>
         </Row>
-        <Row>          
+        <Row>
         </Row>
       </Grid>
     );
