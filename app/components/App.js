@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col, Form, FormGroup, Button, FormControl } from 'react-bootstrap';
 import fs from 'fs';
-import {remote} from 'electron';
+import { remote } from 'electron';
 
 import Item from './Item';
 
@@ -10,8 +10,7 @@ import items from './constants';
 
 export default class App extends Component {
 
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -21,20 +20,32 @@ export default class App extends Component {
       searchText: 'test'
     };
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleUnselect = this.handleUnselect.bind(this);
     this.exportTag = this.exportTag.bind(this);
     this.searchItems = this.searchItems.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
   }
 
-  handleClick(item) {
+  handleSelect(item) {
+
+    const { selectedItems } = this.state;
     console.log(item);
     const arr = [];
-    this.state.selectedItems.forEach( d=> arr.push(d));
+    selectedItems.forEach(d => arr.push(d));
     arr.push(item);
-    items.splice(items.indexOf(item),1);
-    this.setState({selectedItems: arr});
+    this.setState({ selectedItems: arr });
+  }
+
+  handleUnselect(item) {
+    const { selectedItems } = this.state;
+    const arr = [];
+    selectedItems.forEach(d => arr.push(d));
+    const index = arr.findIndex((i) => i.id === item.id);
+    console.log(index);
+    arr.splice(index, 1);
+    this.setState({ selectedItems: arr });
   }
 
   exportTag() {
@@ -59,19 +70,16 @@ export default class App extends Component {
     console.log(this.state.tag);
   }
 
-  filterItems(str)
-  {
-    return str.name.toLowerCase().includes(this.state.searchText.toLowerCase());
-  }
-
   searchItems() {
-    this.setState({unselectedItems : items.filter((str) => str.name.toLowerCase().includes(this.state.searchText.toLowerCase()) && true)});
+    this.setState({ unselectedItems: items.filter((str) => str.name.toLowerCase().includes(
+      this.state.searchText.toLowerCase()) && true) });
   }
 
   handleSearchTextChange(evt) {
     this.setState({ searchText: evt.target.value }, () => {
-      if( this.state.searchText.length >= 3)
+      if (this.state.searchText.length >= 3) {
         this.searchItems();
+      }
     });
     console.log(evt.target.value);
   }
@@ -87,7 +95,8 @@ export default class App extends Component {
                   (<Col
                     key={d.id}
                     xs={3}
-                    onClick={evt => this.handleClick(d)}>
+                    onClick={() => this.handleSelect(d)}
+                  >
                     <Item item={d} />
                   </Col>)
                 )}
@@ -98,12 +107,14 @@ export default class App extends Component {
           <Col xs={6}>
             <div className={'items-box'}>
               <Row>
-                {this.state.selectedItems.map( d =>
-                  (<Col
+                {this.state.selectedItems.map( d => (
+                  <Col
                     key={d.id}
-                    xs={3}>
-                  <Item item={d} />
-                </Col>))}
+                    xs={3}
+                    onClick={() => this.handleUnselect(d)}
+                  >
+                    <Item item={d} />
+                  </Col>))}
               </Row>
             </div>
           </Col>
@@ -117,7 +128,7 @@ export default class App extends Component {
                 <FormControl type="text" placeholder="Enter text to search" onChange={(evt) => this.handleSearchTextChange(evt)} />
               </FormGroup>
               {' '}
-              <Button onClick={e=>this.searchItems()}>
+              <Button onClick={() => this.searchItems()}>
                 Search
               </Button>
             </Form>
@@ -129,7 +140,7 @@ export default class App extends Component {
                 <FormControl type="text" placeholder="Tag name" onChange={(evt) => this.handleTextChange(evt)} />
               </FormGroup>
               {' '}
-              <Button onClick={e=>this.exportTag()}>
+              <Button onClick={() => this.exportTag()}>
                 Export tag
               </Button>
             </Form>
