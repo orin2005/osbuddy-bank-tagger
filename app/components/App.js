@@ -37,14 +37,13 @@ export default class App extends Component {
     this.setState({selectedItems: arr});
   }
 
-  exportTag( tagName="generatedTag" ) {
-
-    let allIds = this.state.selectedItems.map( si => '{\\\"id\\\":' + si.id + '}');
-    allIds.slice(0, allIds.length-1);
+  exportTag() {
+    const allIds = this.state.selectedItems.map(si => `{\\"id\\":${si.id}}`);
+    allIds.slice(0, allIds.length - 1);
 
     const fileName = remote.dialog.showSaveDialog({ title: 'Save the tag' });
 
-    fs.writeFile(fileName, '{"enabled":{"type":"hidden","value":"true"},"tags":{"type":"hidden","value":"[{\\"tag\\":\\"' + this.state.tag + '\\",\\"ids\\":[' + allIds + ']}]"}}', (err) => {
+    fs.writeFile(fileName, `{"enabled":{"type":"hidden","value":"true"},"tags":{"type":"hidden","value":"[{\\"tag\\":\\"${this.state.tag}\\",\\"ids\\":[${allIds}]}]"}}`, (err) => {
       if (err) {
         return console.log(err);
       }
@@ -57,7 +56,7 @@ export default class App extends Component {
 
   handleTextChange(evt) {
     this.setState({ tag: evt.target.value });
-    console.log(this.state.tag)
+    console.log(this.state.tag);
   }
 
   filterItems(str)
@@ -70,8 +69,11 @@ export default class App extends Component {
   }
 
   handleSearchTextChange(evt) {
-    this.setState({ searchText: evt.target.value });
-    console.log(this.state.searchText);
+    this.setState({ searchText: evt.target.value }, () => {
+      if( this.state.searchText.length >= 3)
+        this.searchItems();
+    });
+    console.log(evt.target.value);
   }
 
   render() {
